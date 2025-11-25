@@ -1,5 +1,5 @@
 <?php
-    /*Домашнее задание к занятию «1.1. Знакомство с PHP»
+    /*Домашнее задание к занятию «Пользовательские функции»
     http://localhost/HWorks_PHP/Hw_2_Console.php 
     для консоли
     1.  cd C:\localhost\HWorks_PHP 
