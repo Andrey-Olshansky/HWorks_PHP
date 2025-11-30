@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
     /*Домашнее задание к занятию «1.1. Знакомство с PHP»
     http://localhost/HWorks_PHP/Hw_4_Functions.php 
     для консоли
@@ -7,7 +8,10 @@
     */
 ?>
 <?php
-/*Задание 2: рефакторинг кода 
+/*
+Вариант от 30.11.2025.
+
+Задание 2: рефакторинг кода 
 Есть файл в котором решена задача для хранения списка покупок. Если запустить этот 
 файл то можно будет добавлять новые записи и удалять уже ненужные.
 
@@ -17,15 +21,16 @@
     данных от пользователя.
 2. Два вложенных цикла и вложенные switch-case с вложенными условиями, которые делают 
     код сложным для восприятия.
-Необходимо упростить структуру, вынеся дублирующиеся и вложенные конструкции в отдельные функции. 
+Необходимо упростить структуру, вынеся дублирующиеся и вложенные конструкции в отдельные 
+функции. 
 
 В отдельных функциях должны оказаться:
 1. участок кода, выводящий список покупок на экран и запрашивающий следующее действие;
 2. все действия, находящиеся внутри case.
 
 Дополнительно обратите внимание:
-1. Постарайтесь, чтобы внутри созданных вами функций не было дублирующихся возможностей, а именно 
-    вывода всего списка на экран.
+1. Постарайтесь, чтобы внутри созданных вами функций не было дублирующихся возможностей, 
+а именно вывода всего списка на экран.
 2. Включите строгий режим для этого файла.
 3. Аргументы всех функций должны быть типизированы.
 4. Результаты всех функций должны быть типизированы.
@@ -37,76 +42,78 @@ const OPERATION_DELETE = 2;
 const OPERATION_PRINT = 3;
 
 $operations = [
-    OPERATION_EXIT => OPERATION_EXIT . '. Завершить программу.',
-    OPERATION_ADD => OPERATION_ADD . '. Добавить товар в список покупок.',
-    OPERATION_DELETE => OPERATION_DELETE . '. Удалить товар из списка покупок.',
-    OPERATION_PRINT => OPERATION_PRINT . '. Отобразить список покупок.',
+    OPERATION_EXIT => 'Завершить программу.',
+    OPERATION_ADD => 'Добавить товар в список покупок.',
+    OPERATION_DELETE => 'Удалить товар из списка покупок.',
+    OPERATION_PRINT => 'Отобразить список покупок.',
 ];
 
 $items = [];
 
+// Показывает список покупок
+function showList(array $items): void {
+    if ($items) {
+        echo "Ваш список покупок:\n" . implode("\n", $items) . "\n";
+    } else {
+        echo "Ваш список покупок пуст.\n";
+    }
+}
+
+// Получает номер операции от пользователя 
+function getOperation(array $operations, array $items): string {
+    do {
+        system('cls');
+        showList($items);
+        
+        echo "Выберите операцию:\n";
+        foreach ($operations as $num => $text) {
+            echo "$num. $text\n";
+        }
+        echo '> ';
+        $input = trim(fgets(STDIN));
+
+        if (!isset($operations[$input])) {
+            echo "!!! Неизвестная операция\n";
+        }
+    } while (!isset($operations[$input]));
+    
+    return $input;
+}
+
+// Добавляет товар в список
+function add(array &$items): void {
+    echo "Введите название товара:\n> ";
+    $items[] = trim(fgets(STDIN));
+}
+
+// Удаляет товар из списка
+function delete(array &$items): void {
+    showList($items);
+    echo "Введите товар для удаления:\n> ";
+    $item = trim(fgets(STDIN));
+    
+    $items = array_filter($items, fn($i) => $i !== $item);
+}
+
+// Показывает весь список и ждет нажатия Enter
+function printAll(array $items): void {
+    showList($items);
+    echo "Всего: " . count($items) . " позиций\nНажмите enter";
+    fgets(STDIN);
+}
 
 do {
-    //system('clear');
-    system('cls'); // windows
+    $operation = getOperation($operations, $items);
+    echo "Выбрано: {$operations[$operation]}\n";
 
-    do {
-        if (count($items)) {
-            echo 'Ваш список покупок: ' . PHP_EOL;
-            echo implode("\n", $items) . "\n";
-        } else {
-            echo 'Ваш список покупок пуст.' . PHP_EOL;
-        }
-
-
-        echo 'Выберите операцию для выполнения: ' . PHP_EOL;
-        // Проверить, есть ли товары в списке? Если нет, то не отображать пункт про удаление товаров
-        echo implode(PHP_EOL, $operations) . PHP_EOL . '> ';
-        $operationNumber = trim(fgets(STDIN));
-
-        if (!array_key_exists($operationNumber, $operations)) {
-            system('cls'); // Очистка экрана для Windows
-            echo '!!! Неизвестный номер операции, повторите попытку.' . PHP_EOL;
-        }
-
-    } while (!array_key_exists($operationNumber, $operations));
-
-    echo 'Выбрана операция: '  . $operations[$operationNumber] . PHP_EOL;
-
-    switch ($operationNumber) {
-        case OPERATION_ADD:
-            echo "Введение название товара для добавления в список: \n> ";
-            $itemName = trim(fgets(STDIN));
-            $items[] = $itemName;
-            break;
-
-        case OPERATION_DELETE:
-            // Проверить, есть ли товары в списке? Если нет, то сказать об этом и попросить ввести другую операцию
-            echo 'Текущий список покупок:' . PHP_EOL;
-            echo 'Список покупок: ' . PHP_EOL;
-            echo implode("\n", $items) . "\n";
-
-            echo 'Введение название товара для удаления из списка:' . PHP_EOL . '> ';
-            $itemName = trim(fgets(STDIN));
-
-            if (in_array($itemName, $items, true) !== false) {
-                while (($key = array_search($itemName, $items, true)) !== false) {
-                    unset($items[$key]);
-                }
-            }
-            break;
-
-        case OPERATION_PRINT:
-            echo 'Ваш список покупок: ' . PHP_EOL;
-            echo implode(PHP_EOL, $items) . PHP_EOL;
-            echo 'Всего ' . count($items) . ' позиций. '. PHP_EOL;
-            echo 'Нажмите enter для продолжения';
-            fgets(STDIN);
-            break;
+    switch ($operation) {
+        case OPERATION_ADD: add($items); break;
+        case OPERATION_DELETE: delete($items); break;
+        case OPERATION_PRINT: printAll($items); break;
     }
 
-    echo "\n ----- \n";
-} while ($operationNumber > 0);
+    echo "\n-----\n";
+} while ($operation > 0);
 
 echo 'Программа завершена' . PHP_EOL;
 
