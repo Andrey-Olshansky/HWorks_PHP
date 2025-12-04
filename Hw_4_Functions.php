@@ -7,6 +7,7 @@ declare(strict_types=1);
     2. php Hw_4_Functions.php
     */
 ?>
+
 <?php
 /*
 Вариант от 30.11.2025.
