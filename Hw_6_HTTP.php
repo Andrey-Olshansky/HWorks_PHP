@@ -52,11 +52,19 @@ page_counter.php       # Страница 3 (счётчик)
 page_result.php        # Страница 4 (результат) */
 ?>
 
-<?php
-    /*Домашнее задание к занятию «6_Приложения, работающие по HTTP»
-    http://localhost/HWorks_PHP/Hw_6_HTTP.php 
-    для консоли
-    1. cd C:\localhost\HWorks_PHP 
-    2. php Hw_6_HTTP.php
-    */
-?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTTP Задания</title>
+</head>
+<body>
+    <h1>Задание по HTTP</h1>
+    <ul>
+        <li><a href="page_404.php">1. Страница 404</a> - возвращает код 404</li>
+        <li><a href="page_download.php?text=Пример текста для скачивания">2. Скачать файл</a> - сохраняет текст из GET-параметра</li>
+        <li><a href="page_counter.php">3. Счётчик открытий</a> - счётчик в сессии, редирект при кратности 3</li>
+        <li><a href="page_result.php">4. Результат счётчика</a> - показывает значение счётчика</li>
+    </ul>
+</body>
+</html>
