@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Загрузка файла</title>
+</head>
+<body>
+    <h1>Загрузка файла на сервер</h1>
+    <form action="Hw_7_Forms.php" method="POST" enctype="multipart/form-data">
+        <p>
+            <label>С каким именем сохранить файл на сервере:</label><br>
+            <input type="text" name="file_name" required>
+        </p>
+        <p>
+            <label>Выберите файл:</label><br>
+            <input type="file" name="content" required>
+        </p>
+        <input type="submit" value="Загрузить">
+    </form>
+</body>
+</html>
