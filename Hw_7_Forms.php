@@ -50,8 +50,9 @@
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         // Если нет - редирект на форму
         header('Location: index.html');
-        ob_end_flush();
-        exit;
+        ob_end_flush(); //отправляет весь накопленный в буфере вывод клиенту и 
+                        //выключает буферизацию.
+        exit; // немедленно завершает выполнение скрипта.
     }
 
     // ==================== ПРОВЕРКА №2: ПОЛЕ file_name ====================
@@ -66,7 +67,8 @@
     // ==================== ПРОВЕРКА №3: ФАЙЛ ЗАГРУЖЕН ====================
     // Проверяем, что файл был загружен без ошибок
     // UPLOAD_ERR_OK = 0 (файл успешно загружен)
-    if (!isset($_FILES['content']) || $_FILES['content']['error'] !== UPLOAD_ERR_OK) {
+    if (!isset($_FILES['content']) || $_FILES['content']['error'] 
+        !== UPLOAD_ERR_OK) {
         // Если файл не загружен - редирект на форму
         header('Location: index.html');
         ob_end_flush();
